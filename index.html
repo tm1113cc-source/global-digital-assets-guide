@@ -1,134 +1,30 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#08111f" />
-  <meta name="description" content="出海网络环境纯净度检测与网络风险提示工具" />
-  <title>NetSignal · 一看就懂的网络检测</title>
-  <style>
-    :root{--bg:#07111f;--panel:rgba(13,27,48,.72);--panel2:rgba(18,38,66,.72);--line:rgba(148,190,255,.16);--text:#f4f8ff;--muted:#91a4bf;--cyan:#59d8ff;--violet:#9b8cff;--green:#35e0a1;--amber:#ffc76b;--red:#ff6e83;--shadow:0 24px 80px rgba(0,0,0,.35)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 12% 5%,#16385d 0,transparent 34%),radial-gradient(circle at 92% 12%,#2e1f66 0,transparent 31%),var(--bg);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
-    .shell{width:min(1080px,calc(100% - 32px));margin:auto;position:relative}.topbar{display:flex;justify-content:space-between;align-items:center;padding:24px 0 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em}.brand-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#07111f;box-shadow:0 0 28px #59d8ff55}.brand-mark:before{content:"◒";font-size:20px}.tag{border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:12px;padding:8px 11px;background:#ffffff08}
-    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:end;padding:64px 0 36px}.kicker{display:inline-flex;gap:7px;align-items:center;color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.16em}.kicker i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 16px var(--green);animation:pulse 2s infinite}.hero h1{font-size:clamp(36px,6vw,70px);line-height:1.04;letter-spacing:-.055em;margin:16px 0 18px;max-width:730px}.hero h1 span{background:linear-gradient(100deg,#fff 15%,var(--cyan) 56%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);line-height:1.8;font-size:15px;max-width:600px;margin:0}.signal{position:relative;min-height:220px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(150deg,#ffffff12,#ffffff03);backdrop-filter:blur(18px);box-shadow:var(--shadow);overflow:hidden;padding:24px}.signal:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #59d8ff55;border-radius:50%;right:-50px;top:-45px;box-shadow:0 0 0 22px #59d8ff10,0 0 0 44px #59d8ff08}.signal-label{font-size:11px;color:var(--muted);letter-spacing:.14em}.radar{width:112px;height:112px;border-radius:50%;margin:25px auto 0;border:1px solid #59d8ff66;background:radial-gradient(circle,#59d8ff44 0 2px,transparent 3px),repeating-radial-gradient(circle,transparent 0 25px,#59d8ff33 26px 27px),linear-gradient(135deg,transparent 49%,#59d8ff99 50%,transparent 51%);box-shadow:0 0 28px #59d8ff33;animation:spin 9s linear infinite}.signal-foot{position:absolute;left:24px;bottom:20px;font-size:12px;color:var(--cyan)}
-    .dashboard{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:18px}.card{border:1px solid var(--line);border-radius:22px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:var(--shadow);padding:24px}.card-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.eyebrow{font-size:11px;color:var(--muted);letter-spacing:.13em;font-weight:800}.card h2{font-size:20px;margin:7px 0 0;letter-spacing:-.02em}.run{border:0;border-radius:12px;padding:12px 17px;background:linear-gradient(135deg,var(--cyan),#8be9ff);color:#06111d;font-weight:800;cursor:pointer;transition:.25s;white-space:nowrap;box-shadow:0 8px 24px #59d8ff24}.run:hover{transform:translateY(-2px);box-shadow:0 12px 30px #59d8ff44}.run:disabled{opacity:.6;cursor:wait;transform:none}.status{margin-top:22px;border:1px solid var(--line);border-radius:16px;padding:15px 16px;color:var(--muted);display:flex;gap:11px;align-items:flex-start;line-height:1.6;background:#ffffff05}.status-dot{width:9px;height:9px;border-radius:50%;margin-top:7px;background:var(--muted);flex:0 0 auto}.status.good{border-color:#35e0a155;background:#35e0a10d;color:#c7ffed}.status.good .status-dot{background:var(--green);box-shadow:0 0 14px var(--green)}.status.warn{border-color:#ffc76b55;background:#ffc76b0d;color:#ffe8bb}.status.warn .status-dot{background:var(--amber);box-shadow:0 0 14px var(--amber)}.status.bad{border-color:#ff6e8355;background:#ff6e830d;color:#ffd2d9}.status.bad .status-dot{background:var(--red);box-shadow:0 0 14px var(--red)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.metric{background:var(--panel2);border:1px solid #ffffff0c;border-radius:14px;padding:14px;min-width:0}.metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}.metric strong{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.side-title{font-weight:800;margin-bottom:16px}.score{display:flex;align-items:center;gap:18px;padding:17px;border-radius:16px;background:linear-gradient(135deg,#ffffff0c,#ffffff03);border:1px solid #ffffff0b}.score-ring{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) 0 72%,#ffffff12 72%);position:relative}.score-ring:after{content:"";position:absolute;inset:7px;background:#11243e;border-radius:50%}.score-ring b{position:relative;z-index:1;font-size:18px}.score p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.tips{display:grid;gap:10px;margin-top:16px}.tip{display:flex;gap:10px;color:var(--muted);font-size:12px;line-height:1.6}.tip b{color:var(--text);display:block;font-size:13px}.tip-icon{width:25px;height:25px;border-radius:8px;background:#59d8ff16;color:var(--cyan);display:grid;place-items:center;flex:0 0 auto}.info{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:18px 0}.info .card{padding:20px}.info h3{font-size:15px;margin:9px 0 7px}.info p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.link{border-radius:11px;padding:11px 14px;text-decoration:none;font-size:12px;font-weight:800;background:#ffffff0b;border:1px solid var(--line);color:var(--text);transition:.2s}.link:hover{background:#ffffff16;transform:translateY(-1px)}.link.primary{background:linear-gradient(135deg,var(--violet),#c08cff);border-color:transparent;color:#160d2c}.foot{text-align:center;color:#6f819d;font-size:11px;padding:18px 0 34px;line-height:1.8}.hidden{display:none!important}@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}@keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:760px){.shell{width:min(100% - 24px,680px)}.topbar{padding-top:16px}.tag{display:none}.hero{grid-template-columns:1fr;padding:45px 0 24px}.signal{min-height:130px}.radar{position:absolute;right:27px;top:15px;width:88px;height:88px;margin:0}.signal-foot{left:20px;bottom:18px}.dashboard{grid-template-columns:1fr}.info{grid-template-columns:1fr}.card{padding:18px}.hero h1{font-size:43px}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:span 2}}
-    @media(max-width:420px){.card-head{display:block}.run{width:100%;margin-top:16px}.hero h1{font-size:38px}.metrics{grid-template-columns:1fr}.metrics .metric:last-child{grid-column:auto}}
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07101a"><title>NetSignal · 网络环境检测</title>
+<style>
+:root{--bg:#071019;--panel:#111b26;--panel2:#162431;--line:#263747;--text:#e7f0f7;--muted:#8498a8;--cyan:#48b9ed;--green:#31d695;--yellow:#ffc857;--red:#ff6b76;--shadow:0 12px 30px #0005}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -15%,#163b52 0,#071019 42%);color:var(--text);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.wrap{width:min(1180px,calc(100% - 24px));margin:auto}.nav{height:58px;display:flex;align-items:center;gap:24px;border-bottom:1px solid #ffffff0d}.logo{font-size:22px;font-weight:900;color:#eaf7ff;letter-spacing:.02em}.logo b{color:var(--cyan)}.nav a{color:#a9bac7;text-decoration:none;font-size:13px}.nav a.active,.nav a:hover{color:#fff}.nav .spacer{flex:1}.lang{border:1px solid var(--line);border-radius:6px;padding:5px 9px;color:var(--muted);font-size:12px}.scanbar{margin-top:14px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(90deg,#111d29,#0c1722);box-shadow:var(--shadow);padding:13px 16px}.scanline{display:flex;align-items:center;gap:10px}.spinner{width:17px;height:17px;border:2px solid #ffffff22;border-top-color:var(--cyan);border-radius:50%;animation:spin 1s linear infinite}.scanline strong{font-size:14px}.scanline small{color:var(--muted)}.progress{height:5px;background:#ffffff12;border-radius:99px;margin-top:11px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .4s}.grid{display:grid;grid-template-columns:250px 1fr 1fr;gap:12px;margin-top:14px}.card{border:1px solid var(--line);border-radius:9px;background:linear-gradient(160deg,#14212d,#0d1720);box-shadow:var(--shadow);overflow:hidden}.cardhead{padding:12px 14px;border-bottom:1px solid #ffffff0b;display:flex;justify-content:space-between;align-items:center;font-weight:800}.cardhead span{font-size:12px;color:var(--muted);font-weight:400}.cardbody{padding:14px}.score{min-height:207px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 36%,#174363,#101b26 58%)}.score small{color:var(--muted)}.score strong{font-size:66px;line-height:1;color:var(--green);letter-spacing:-.06em;margin:5px 0}.badge{font-size:12px;padding:3px 12px;border-radius:99px;color:#062017;background:var(--green)}.substats{display:flex;justify-content:space-around;width:100%;margin-top:18px;color:var(--muted);font-size:11px;text-align:center}.substats b{display:block;color:var(--green);font-size:14px}.kv{display:grid;grid-template-columns:105px 1fr;gap:8px 12px;font-size:13px}.kv label{color:var(--muted)}.kv strong{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}.pill{display:inline-block;border:1px solid #ffffff1c;border-radius:5px;padding:2px 7px;font-size:11px;color:var(--muted);margin:2px 3px 2px 0}.notice{color:var(--muted);font-size:12px;margin-top:10px}.wide{grid-column:span 2}.actions{display:flex;gap:8px;margin:16px 0 26px}.button{border:1px solid #3f819e;background:#12354a;color:#bdeeff;border-radius:7px;padding:9px 14px;cursor:pointer;font-weight:700}.button:hover{background:#174a65}.footer{text-align:center;color:#617586;font-size:11px;padding:5px 0 28px}.hidden{display:none!important}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.scorecard{grid-column:span 2}.wide{grid-column:span 2}}@media(max-width:560px){.wrap{width:calc(100% - 16px)}.nav{gap:12px;overflow:auto;white-space:nowrap}.nav a:nth-of-type(n+4){display:none}.grid{grid-template-columns:1fr}.scorecard,.wide{grid-column:auto}.score{min-height:175px}.logo{font-size:20px}.kv{grid-template-columns:92px 1fr}}
+</style>
 </head>
-<body>
-  <div class="shell">
-    <nav class="topbar"><div class="brand"><div class="brand-mark"></div><span>NetSignal</span></div><span class="tag">一看就懂 · 网络环境检测</span></nav>
-    <header class="hero"><div><div class="kicker"><i></i> 免费网络环境检测</div><h1>先看清网络，<br/><span>再做重要操作。</span></h1><p>点击一次，直接看懂当前网络是家宽还是机房、风险高不高、速度快不快。技术信息会自动整理成简单结论。</p></div><div class="signal"><div class="signal-label">检测准备就绪</div><div class="radar"></div><div class="signal-foot">● 可以开始检测</div></div></header>
-    <section class="dashboard">
-      <div class="card"><div class="card-head"><div><div class="eyebrow">第一步</div><h2>看看你的网络是什么类型</h2></div><button id="check" class="run" type="button">开始检测</button></div><div id="status" class="status"><span class="status-dot"></span><span>点击“开始检测”，系统会自动判断你的网络情况。</span></div><div id="metrics" class="metrics hidden"></div></div>
-      <aside class="card"><div class="side-title">结果总览</div><div class="score"><div class="score-ring"><b id="score">—</b></div><p id="scoreText">完成检测后<br/>显示参考结果</p></div><div class="tips"><div class="tip"><span class="tip-icon">✓</span><div><b>稳定优先</b>避免频繁切换网络环境。</div></div><div class="tip"><span class="tip-icon">i</span><div><b>仅供参考</b>不代表任何平台的最终风控结论。</div></div></div></aside>
-    </section>
-    <section class="info"><div class="card"><div class="eyebrow">WHY IT MATTERS</div><h3>网络归属</h3><p>查看运营商和组织信息，识别当前连接的大致类型。</p></div><div class="card"><div class="eyebrow">PRIVACY FIRST</div><h3>不保存信息</h3><p>页面不会建立账号，也不会保存你的 IP 检测结果。</p></div><div class="card"><div class="eyebrow">STAY COMPLIANT</div><h3>遵守规则</h3><p>请使用正规网络和服务，并遵循相关平台的官方条款。</p></div></section>
-    <section class="card"><div class="eyebrow">检测说明</div><h2 style="margin:8px 0 0;font-size:20px">想了解更多？</h2><p style="color:var(--muted);font-size:13px;line-height:1.7;margin:10px 0 0">检测结果用大白话展示，技术细节放在检测结果下方。结果仅供参考，请根据实际情况判断。</p><div class="actions"><a class="link primary" href="https://cancan666.com/zh" target="_blank" rel="noopener noreferrer">查看相关资源</a><a class="link" href="https://ipwho.is/" target="_blank" rel="noopener noreferrer">查看数据来源</a></div></section>
-    <footer class="foot">NetSignal · 基础网络信息工具<br/>数据来自公开接口，仅供参考，不代表任何平台的审核结果。</footer>
-  </div>
-  <script>
-    const button = document.getElementById("check");
-    const status = document.getElementById("status");
-    const metrics = document.getElementById("metrics");
-    const score = document.getElementById("score");
-    const scoreText = document.getElementById("scoreText");
-
-    const escapeHtml = (value) => String(value ?? "—").replace(/[&<>"']/g, (char) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[char]));
-
-    const setStatus = (text, type = "") => {
-      status.className = "status " + type;
-      status.innerHTML = '<span class="status-dot"></span><span>' + escapeHtml(text) + "</span>";
-    };
-
-    const setMetrics = (data) => {
-      const rows = [
-        ["你的公网 IP", data.ip],
-        ["所在地区", `${data.country_name || "—"} ${data.country_code || ""}`],
-        ["所在城市", data.city],
-        ["网络运营商", data.org],
-        ["当地时区", data.timezone],
-        ["网络编号", data.asn]
-      ];
-      metrics.innerHTML = rows.map(([key, value]) => `
-        <div class="metric"><small>${escapeHtml(key)}</small><strong title="${escapeHtml(value)}">${escapeHtml(value)}</strong></div>
-      `).join("");
-      metrics.classList.remove("hidden");
-    };
-
-    const requestJson = async (url, timeout = 8000) => {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeout);
-      try {
-        const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-      } finally {
-        clearTimeout(timer);
-      }
-    };
-
-    const getNetworkData = async () => {
-      const providers = [
-        async () => {
-          const d = await requestJson("https://ipwho.is/");
-          if (d.success === false) throw new Error("ipwho failed");
-          return {
-            ip: d.ip,
-            country_name: d.country,
-            country_code: d.country_code,
-            city: d.city,
-            org: d.connection?.org || d.connection?.isp,
-            timezone: d.timezone?.id,
-            asn: d.connection?.asn ? `AS${d.connection.asn}` : "—"
-          };
-        },
-        async () => {
-          const d = await requestJson("https://ipapi.co/json/");
-          if (d.error) throw new Error(d.reason || "ipapi failed");
-          return d;
-        }
-      ];
-
-      let lastError;
-      for (const provider of providers) {
-        try { return await provider(); } catch (error) { lastError = error; }
-      }
-      throw lastError || new Error("all providers failed");
-    };
-
-    button.addEventListener("click", async () => {
-      button.disabled = true;
-      button.textContent = "正在检测…";
-      metrics.classList.add("hidden");
-      score.textContent = "—";
-      scoreText.innerHTML = "正在判断<br />网络类型";
-      setStatus("正在检测，请稍候…");
-
-      try {
-        const data = await getNetworkData();
-        const organization = (data.org || "").toLowerCase();
-        const cloudNetwork = /amazon|aws|google cloud|microsoft|azure|digitalocean|ovh|vultr|oracle|alibaba|腾讯云|阿里云|华为云|hosting|server|datacenter|data center/.test(organization);
-        const points = cloudNetwork ? 42 : 78;
-        score.textContent = points;
-        scoreText.innerHTML = cloudNetwork ? "可能是机房网络<br />建议进一步确认" : "暂未发现明显风险<br />可以继续使用";
-        setStatus(
-          cloudNetwork ? "检测到当前网络可能属于机房或云服务商，建议进一步确认。" : "暂未发现明显的机房关键词，但这不代表任何平台一定会放行。",
-          cloudNetwork ? "warn" : "good"
-        );
-        setMetrics(data);
-      } catch (error) {
-        score.textContent = "!";
-        scoreText.innerHTML = "接口暂时不可用<br />请稍后重试";
-        setStatus("检测接口暂时拥挤，请稍后再试或切换网络。", "bad");
-      } finally {
-        button.disabled = false;
-        button.textContent = "重新检测";
-      }
-    });
-  </script>
-</body>
-</html>
+<body><div class="wrap">
+<nav class="nav"><div class="logo"><b>◉</b> NetSignal</div><a class="active" href="#">IP 查询</a><a href="#report">环境检测</a><a href="https://ping0.cc/" target="_blank" rel="noopener">参考 Ping0</a><div class="spacer"></div><div class="lang">中文</div></nav>
+<section class="scanbar"><div class="scanline"><div class="spinner" id="spinner"></div><strong id="scanText">等待检测</strong><small id="scanStep">点击下方按钮开始</small></div><div class="progress"><i id="progress"></i></div></section>
+<div class="actions"><button class="button" id="check">开始检测</button><span class="notice">检测结果仅作网络环境参考，不代表任何平台最终审核结论。</span></div>
+<main id="report" class="grid">
+<section class="card scorecard"><div class="cardhead">当前风控参考分 <span>0–100</span></div><div class="score"><small>参考评分</small><strong id="score">—</strong><span id="badge" class="badge">等待检测</span><div class="substats"><div>已检测<b id="done">0</b></div><div>异常项<b id="issues">—</b></div><div>总项目<b>6</b></div></div></div></section>
+<section class="card"><div class="cardhead">🛰 网络出口 <span id="ipState">等待</span></div><div class="cardbody"><div class="kv"><label>公网 IP</label><strong id="ip">—</strong><label>网络类型</label><strong id="type">—</strong><label>运营商</label><strong id="org">—</strong><label>ASN</label><strong id="asn">—</strong></div></div></section>
+<section class="card"><div class="cardhead">🌍 地区信息 <span id="regionState">等待</span></div><div class="cardbody"><div class="kv"><label>国家/地区</label><strong id="country">—</strong><label>城市</label><strong id="city">—</strong><label>时区</label><strong id="timezone">—</strong><label>IP 版本</label><strong id="version">—</strong></div></div></section>
+<section class="card"><div class="cardhead">🛡 风险判断 <span id="riskState">等待</span></div><div class="cardbody"><div class="kv"><label>机房关键词</label><strong id="datacenter">—</strong><label>VPN / 代理</label><strong class="warn">仅作基础判断</strong><label>Tor 节点</label><strong class="warn">未接入数据库</strong></div><div class="notice">公开接口无法替代专业风控数据库，结果请结合实际使用场景判断。</div></div></section>
+<section class="card"><div class="cardhead">⚡ 网络速度 <span id="speedState">等待</span></div><div class="cardbody"><div class="kv"><label>接口响应</label><strong id="latency">—</strong><label>网络评价</label><strong id="quality">—</strong><label>检测次数</label><strong id="tries">—</strong></div><div class="notice">通过多次网页请求估算响应速度，不等同于系统 Ping。</div></div></section>
+<section class="card wide"><div class="cardhead">📌 一句话结论 <span>简单看懂</span></div><div class="cardbody"><strong id="summary">点击“开始检测”，这里会用大白话告诉你当前网络的大致情况。</strong><div class="notice" id="detail">检测完成后会显示：家宽/机房倾向、风险参考和网络速度。</div></div></section>
+</main><footer class="footer">NetSignal · 简单易懂的网络环境检测工具<br>数据来自公开接口，不保存检测结果。</footer></div>
+<script>
+const $=id=>document.getElementById(id),check=$("check"),progress=$("progress"),spinner=$("spinner");
+const esc=v=>String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const set=(id,v,cls="")=>{$(id).textContent=v;$(id).className=cls};
+async function json(url,ms=8000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{signal:c.signal,cache:"no-store"});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}}
+async function getData(){try{const d=await json("https://ipwho.is/");if(d.success===false)throw Error();return {ip:d.ip,country:d.country,country_code:d.country_code,city:d.city,org:d.connection?.org||d.connection?.isp,asn:d.connection?.asn?`AS${d.connection.asn}`:"—",timezone:d.timezone?.id,type:d.type||"IPv4"}}catch(e){const d=await json("https://ipapi.co/json/");return {ip:d.ip,country:d.country_name,country_code:d.country_code,city:d.city,org:d.org,asn:d.asn,timezone:d.timezone,type:d.version||"IPv4"}}}
+async function measure(){const a=[];for(let i=0;i<3;i++){const t=performance.now();try{await json("https://ipwho.is/",7000);a.push(Math.round(performance.now()-t))}catch(e){}}return a}
+check.onclick=async()=>{check.disabled=true;check.textContent="检测中…";spinner.style.animationPlayState="running";$("scanText").textContent="正在检测";$("scanStep").textContent="读取网络出口信息";progress.style.width="20%";$("summary").textContent="正在分析你的网络，请稍候…";try{const d=await getData();progress.style.width="55%";$("scanStep").textContent="分析网络类型与地区";const org=(d.org||"").toLowerCase(),dc=/amazon|aws|google cloud|microsoft|azure|digitalocean|ovh|vultr|oracle|alibaba|腾讯云|阿里云|华为云|hosting|server|datacenter|data center/.test(org);set("ip",d.ip);set("type",dc?"疑似机房/云网络":"暂未发现机房关键词",dc?"warn":"ok");set("org",d.org);set("asn",d.asn);set("country",`${d.country||"—"} ${d.country_code||""}`);set("city",d.city);set("timezone",d.timezone);set("version",d.type);set("datacenter",dc?"发现机房关键词":"暂未发现",dc?"warn":"ok");set("ipState","已完成","ok");set("regionState","已完成","ok");progress.style.width="75%";$("scanStep").textContent="测试网络响应速度";const a=await measure(),avg=a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;set("latency",avg?`${avg} ms`:"失败");set("tries",`${a.length}/3 次成功`);const quality=avg<150?"较快":avg<350?"一般":"较慢";set("quality",quality,avg<350?"ok":"warn");const points=dc?42:78,issues=dc?1:0;set("score",points,dc?"warn":"ok");set("badge",dc?"需要注意":"暂未发现明显风险",dc?"badge warn":"badge");set("done","6");set("issues",issues);set("riskState",dc?"需注意":"较稳定",dc?"warn":"ok");set("speedState",quality,avg<350?"ok":"warn");$("summary").textContent=dc?"当前网络看起来更像机房或云服务商网络，建议进一步确认。":"当前暂未发现明显的机房网络关键词，整体看起来比较稳定。";$("detail").textContent=`网络响应约 ${avg||"—"} ms，检测 ${a.length}/3 次成功。结果仅供参考。`;progress.style.width="100%";$("scanText").textContent="检测完成";$("scanStep").textContent="已完成 6 项基础检查"}catch(e){set("summary","检测接口暂时不可用，请切换网络后重试。","bad");$("scanText").textContent="检测失败";$("scanStep").textContent="公共接口未返回数据";progress.style.width="0%"}finally{check.disabled=false;check.textContent="重新检测"}};
+</script></body></html>
