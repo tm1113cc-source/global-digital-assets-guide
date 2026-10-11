@@ -5,767 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#08111f" />
   <meta name="description" content="出海网络环境纯净度检测与网络风险提示工具" />
-  <title>NetSignal · 出海网络环境检测</title>
-
+  <title>NetSignal · 一看就懂的网络检测</title>
   <style>
-    :root {
-      --bg: #07111f;
-      --panel: rgba(13, 27, 48, 0.72);
-      --panel-2: rgba(18, 38, 66, 0.72);
-      --line: rgba(148, 190, 255, 0.16);
-      --text: #f4f8ff;
-      --muted: #91a4bf;
-      --cyan: #59d8ff;
-      --violet: #9b8cff;
-      --green: #35e0a1;
-      --amber: #ffc76b;
-      --red: #ff6e83;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "PingFang SC",
-        "Microsoft YaHei",
-        sans-serif;
-      background:
-        radial-gradient(circle at 12% 5%, #16385d 0, transparent 34%),
-        radial-gradient(circle at 92% 12%, #2e1f66 0, transparent 31%),
-        var(--bg);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.15;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: linear-gradient(to bottom, #000, transparent 75%);
-    }
-
-    .shell {
-      width: min(1080px, calc(100% - 32px));
-      margin: auto;
-      position: relative;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px 0 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 11px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--cyan), var(--violet));
-      color: #07111f;
-      box-shadow: 0 0 28px #59d8ff55;
-    }
-
-    .brand-mark::before {
-      content: "◒";
-      font-size: 20px;
-    }
-
-    .tag {
-      border: 1px solid var(--line);
-      border-radius: 99px;
-      color: var(--muted);
-      font-size: 12px;
-      padding: 8px 11px;
-      background: #ffffff08;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
-      align-items: end;
-      padding: 64px 0 36px;
-    }
-
-    .kicker {
-      display: inline-flex;
-      gap: 7px;
-      align-items: center;
-      color: var(--cyan);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-    }
-
-    .kicker i {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 16px var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 70px);
-      line-height: 1.04;
-      letter-spacing: -0.055em;
-      margin: 16px 0 18px;
-      max-width: 730px;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(
-        100deg,
-        #fff 15%,
-        var(--cyan) 56%,
-        var(--violet)
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 15px;
-      max-width: 600px;
-      margin: 0;
-    }
-
-    .signal {
-      position: relative;
-      min-height: 220px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: linear-gradient(150deg, #ffffff12, #ffffff03);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 24px;
-    }
-
-    .signal::after {
-      content: "";
-      position: absolute;
-      width: 210px;
-      height: 210px;
-      border: 1px solid #59d8ff55;
-      border-radius: 50%;
-      right: -50px;
-      top: -45px;
-      box-shadow:
-        0 0 0 22px #59d8ff10,
-        0 0 0 44px #59d8ff08;
-    }
-
-    .signal-label {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.14em;
-    }
-
-    .radar {
-      width: 112px;
-      height: 112px;
-      border-radius: 50%;
-      margin: 25px auto 0;
-      border: 1px solid #59d8ff66;
-      background:
-        radial-gradient(circle, #59d8ff44 0 2px, transparent 3px),
-        repeating-radial-gradient(
-          circle,
-          transparent 0 25px,
-          #59d8ff33 26px 27px
-        ),
-        linear-gradient(
-          135deg,
-          transparent 49%,
-          #59d8ff99 50%,
-          transparent 51%
-        );
-      box-shadow: 0 0 28px #59d8ff33;
-      animation: spin 9s linear infinite;
-    }
-
-    .signal-foot {
-      position: absolute;
-      left: 24px;
-      bottom: 20px;
-      font-size: 12px;
-      color: var(--cyan);
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
-      gap: 18px;
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .eyebrow {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.13em;
-      font-weight: 800;
-    }
-
-    .card h2 {
-      font-size: 20px;
-      margin: 7px 0 0;
-      letter-spacing: -0.02em;
-    }
-
-    .run {
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 17px;
-      background: linear-gradient(135deg, var(--cyan), #8be9ff);
-      color: #06111d;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.25s;
-      white-space: nowrap;
-      box-shadow: 0 8px 24px #59d8ff24;
-    }
-
-    .run:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px #59d8ff44;
-    }
-
-    .run:disabled {
-      opacity: 0.6;
-      cursor: wait;
-      transform: none;
-    }
-
-    .status {
-      margin-top: 22px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 15px 16px;
-      color: var(--muted);
-      display: flex;
-      gap: 11px;
-      align-items: flex-start;
-      line-height: 1.6;
-      background: #ffffff05;
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      margin-top: 7px;
-      background: var(--muted);
-      flex: 0 0 auto;
-    }
-
-    .status.good {
-      border-color: #35e0a155;
-      background: #35e0a10d;
-      color: #c7ffed;
-    }
-
-    .status.good .status-dot {
-      background: var(--green);
-      box-shadow: 0 0 14px var(--green);
-    }
-
-    .status.warn {
-      border-color: #ffc76b55;
-      background: #ffc76b0d;
-      color: #ffe8bb;
-    }
-
-    .status.warn .status-dot {
-      background: var(--amber);
-      box-shadow: 0 0 14px var(--amber);
-    }
-
-    .status.bad {
-      border-color: #ff6e8355;
-      background: #ff6e830d;
-      color: #ffd2d9;
-    }
-
-    .status.bad .status-dot {
-      background: var(--red);
-      box-shadow: 0 0 14px var(--red);
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .metric {
-      background: var(--panel-2);
-      border: 1px solid #ffffff0c;
-      border-radius: 14px;
-      padding: 14px;
-      min-width: 0;
-    }
-
-    .metric small {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      margin-bottom: 7px;
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .side-title {
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .score {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 17px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #ffffff0c, #ffffff03);
-      border: 1px solid #ffffff0b;
-    }
-
-    .score-ring {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: conic-gradient(var(--cyan) 0 72%, #ffffff12 72%);
-      position: relative;
-    }
-
-    .score-ring::after {
-      content: "";
-      position: absolute;
-      inset: 7px;
-      background: #11243e;
-      border-radius: 50%;
-    }
-
-    .score-ring b {
-      position: relative;
-      z-index: 1;
-      font-size: 18px;
-    }
-
-    .score p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .tips {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .tip {
-      display: flex;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .tip b {
-      color: var(--text);
-      display: block;
-      font-size: 13px;
-    }
-
-    .tip-icon {
-      width: 25px;
-      height: 25px;
-      border-radius: 8px;
-      background: #59d8ff16;
-      color: var(--cyan);
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-    }
-
-    .info {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin: 18px 0;
-    }
-
-    .info .card {
-      padding: 20px;
-    }
-
-    .info h3 {
-      font-size: 15px;
-      margin: 9px 0 7px;
-    }
-
-    .info p {
-      font-size: 12px;
-      line-height: 1.7;
-      color: var(--muted);
-      margin: 0;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .link {
-      border-radius: 11px;
-      padding: 11px 14px;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 800;
-      background: #ffffff0b;
-      border: 1px solid var(--line);
-      color: var(--text);
-      transition: 0.2s;
-    }
-
-    .link:hover {
-      background: #ffffff16;
-      transform: translateY(-1px);
-    }
-
-    .link.primary {
-      background: linear-gradient(135deg, var(--violet), #c08cff);
-      border-color: transparent;
-      color: #160d2c;
-    }
-
-    .foot {
-      text-align: center;
-      color: #6f819d;
-      font-size: 11px;
-      padding: 18px 0 34px;
-      line-height: 1.8;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @keyframes pulse {
-      50% {
-        opacity: 0.35;
-        transform: scale(0.7);
-      }
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @media (max-width: 760px) {
-      .shell {
-        width: min(100% - 24px, 680px);
-      }
-
-      .topbar {
-        padding-top: 16px;
-      }
-
-      .tag {
-        display: none;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 45px 0 24px;
-      }
-
-      .signal {
-        min-height: 130px;
-      }
-
-      .radar {
-        position: absolute;
-        right: 27px;
-        top: 15px;
-        width: 88px;
-        height: 88px;
-        margin: 0;
-      }
-
-      .signal-foot {
-        left: 20px;
-        bottom: 18px;
-      }
-
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-
-      .info {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        padding: 18px;
-      }
-
-      .hero h1 {
-        font-size: 43px;
-      }
-
-      .metrics {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .metrics .metric:last-child {
-        grid-column: span 2;
-      }
-    }
-
-    @media (max-width: 420px) {
-      .card-head {
-        display: block;
-      }
-
-      .run {
-        width: 100%;
-        margin-top: 16px;
-      }
-
-      .hero h1 {
-        font-size: 38px;
-      }
-
-      .metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .metrics .metric:last-child {
-        grid-column: auto;
-      }
-    }
+    :root{--bg:#07111f;--panel:rgba(13,27,48,.72);--panel2:rgba(18,38,66,.72);--line:rgba(148,190,255,.16);--text:#f4f8ff;--muted:#91a4bf;--cyan:#59d8ff;--violet:#9b8cff;--green:#35e0a1;--amber:#ffc76b;--red:#ff6e83;--shadow:0 24px 80px rgba(0,0,0,.35)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 12% 5%,#16385d 0,transparent 34%),radial-gradient(circle at 92% 12%,#2e1f66 0,transparent 31%),var(--bg);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
+    .shell{width:min(1080px,calc(100% - 32px));margin:auto;position:relative}.topbar{display:flex;justify-content:space-between;align-items:center;padding:24px 0 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em}.brand-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#07111f;box-shadow:0 0 28px #59d8ff55}.brand-mark:before{content:"◒";font-size:20px}.tag{border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:12px;padding:8px 11px;background:#ffffff08}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:end;padding:64px 0 36px}.kicker{display:inline-flex;gap:7px;align-items:center;color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.16em}.kicker i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 16px var(--green);animation:pulse 2s infinite}.hero h1{font-size:clamp(36px,6vw,70px);line-height:1.04;letter-spacing:-.055em;margin:16px 0 18px;max-width:730px}.hero h1 span{background:linear-gradient(100deg,#fff 15%,var(--cyan) 56%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);line-height:1.8;font-size:15px;max-width:600px;margin:0}.signal{position:relative;min-height:220px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(150deg,#ffffff12,#ffffff03);backdrop-filter:blur(18px);box-shadow:var(--shadow);overflow:hidden;padding:24px}.signal:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #59d8ff55;border-radius:50%;right:-50px;top:-45px;box-shadow:0 0 0 22px #59d8ff10,0 0 0 44px #59d8ff08}.signal-label{font-size:11px;color:var(--muted);letter-spacing:.14em}.radar{width:112px;height:112px;border-radius:50%;margin:25px auto 0;border:1px solid #59d8ff66;background:radial-gradient(circle,#59d8ff44 0 2px,transparent 3px),repeating-radial-gradient(circle,transparent 0 25px,#59d8ff33 26px 27px),linear-gradient(135deg,transparent 49%,#59d8ff99 50%,transparent 51%);box-shadow:0 0 28px #59d8ff33;animation:spin 9s linear infinite}.signal-foot{position:absolute;left:24px;bottom:20px;font-size:12px;color:var(--cyan)}
+    .dashboard{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:18px}.card{border:1px solid var(--line);border-radius:22px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:var(--shadow);padding:24px}.card-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.eyebrow{font-size:11px;color:var(--muted);letter-spacing:.13em;font-weight:800}.card h2{font-size:20px;margin:7px 0 0;letter-spacing:-.02em}.run{border:0;border-radius:12px;padding:12px 17px;background:linear-gradient(135deg,var(--cyan),#8be9ff);color:#06111d;font-weight:800;cursor:pointer;transition:.25s;white-space:nowrap;box-shadow:0 8px 24px #59d8ff24}.run:hover{transform:translateY(-2px);box-shadow:0 12px 30px #59d8ff44}.run:disabled{opacity:.6;cursor:wait;transform:none}.status{margin-top:22px;border:1px solid var(--line);border-radius:16px;padding:15px 16px;color:var(--muted);display:flex;gap:11px;align-items:flex-start;line-height:1.6;background:#ffffff05}.status-dot{width:9px;height:9px;border-radius:50%;margin-top:7px;background:var(--muted);flex:0 0 auto}.status.good{border-color:#35e0a155;background:#35e0a10d;color:#c7ffed}.status.good .status-dot{background:var(--green);box-shadow:0 0 14px var(--green)}.status.warn{border-color:#ffc76b55;background:#ffc76b0d;color:#ffe8bb}.status.warn .status-dot{background:var(--amber);box-shadow:0 0 14px var(--amber)}.status.bad{border-color:#ff6e8355;background:#ff6e830d;color:#ffd2d9}.status.bad .status-dot{background:var(--red);box-shadow:0 0 14px var(--red)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.metric{background:var(--panel2);border:1px solid #ffffff0c;border-radius:14px;padding:14px;min-width:0}.metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}.metric strong{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.side-title{font-weight:800;margin-bottom:16px}.score{display:flex;align-items:center;gap:18px;padding:17px;border-radius:16px;background:linear-gradient(135deg,#ffffff0c,#ffffff03);border:1px solid #ffffff0b}.score-ring{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) 0 72%,#ffffff12 72%);position:relative}.score-ring:after{content:"";position:absolute;inset:7px;background:#11243e;border-radius:50%}.score-ring b{position:relative;z-index:1;font-size:18px}.score p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.tips{display:grid;gap:10px;margin-top:16px}.tip{display:flex;gap:10px;color:var(--muted);font-size:12px;line-height:1.6}.tip b{color:var(--text);display:block;font-size:13px}.tip-icon{width:25px;height:25px;border-radius:8px;background:#59d8ff16;color:var(--cyan);display:grid;place-items:center;flex:0 0 auto}.info{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:18px 0}.info .card{padding:20px}.info h3{font-size:15px;margin:9px 0 7px}.info p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.link{border-radius:11px;padding:11px 14px;text-decoration:none;font-size:12px;font-weight:800;background:#ffffff0b;border:1px solid var(--line);color:var(--text);transition:.2s}.link:hover{background:#ffffff16;transform:translateY(-1px)}.link.primary{background:linear-gradient(135deg,var(--violet),#c08cff);border-color:transparent;color:#160d2c}.foot{text-align:center;color:#6f819d;font-size:11px;padding:18px 0 34px;line-height:1.8}.hidden{display:none!important}@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}@keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:760px){.shell{width:min(100% - 24px,680px)}.topbar{padding-top:16px}.tag{display:none}.hero{grid-template-columns:1fr;padding:45px 0 24px}.signal{min-height:130px}.radar{position:absolute;right:27px;top:15px;width:88px;height:88px;margin:0}.signal-foot{left:20px;bottom:18px}.dashboard{grid-template-columns:1fr}.info{grid-template-columns:1fr}.card{padding:18px}.hero h1{font-size:43px}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:span 2}}
+    @media(max-width:420px){.card-head{display:block}.run{width:100%;margin-top:16px}.hero h1{font-size:38px}.metrics{grid-template-columns:1fr}.metrics .metric:last-child{grid-column:auto}}
   </style>
 </head>
-
 <body>
   <div class="shell">
-    <nav class="topbar">
-      <div class="brand">
-        <div class="brand-mark"></div>
-        <span>NetSignal</span>
-      </div>
-      <span class="tag">NETWORK INTELLIGENCE · 2026</span>
-    </nav>
-
-    <header class="hero">
-      <div>
-        <div class="kicker">
-          <i></i>
-          LIVE ENVIRONMENT CHECK
-        </div>
-
-        <h1>
-          先看清网络，<br />
-          <span>再做重要操作。</span>
-        </h1>
-
-        <p>
-          一个轻量、快速、隐私友好的公网网络诊断工具。
-          了解当前 IP 的基础归属与组织信息，减少在陌生网络环境中处理重要账号和服务时的不确定性。
-        </p>
-      </div>
-
-      <div class="signal">
-        <div class="signal-label">SIGNAL MONITOR</div>
-        <div class="radar"></div>
-        <div class="signal-foot">● READY TO SCAN</div>
-      </div>
-    </header>
-
+    <nav class="topbar"><div class="brand"><div class="brand-mark"></div><span>NetSignal</span></div><span class="tag">一看就懂 · 网络环境检测</span></nav>
+    <header class="hero"><div><div class="kicker"><i></i> 免费网络环境检测</div><h1>先看清网络，<br/><span>再做重要操作。</span></h1><p>点击一次，直接看懂当前网络是家宽还是机房、风险高不高、速度快不快。技术信息会自动整理成简单结论。</p></div><div class="signal"><div class="signal-label">检测准备就绪</div><div class="radar"></div><div class="signal-foot">● 可以开始检测</div></div></header>
     <section class="dashboard">
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="eyebrow">01 / PUBLIC NETWORK</div>
-            <h2>当前网络检测</h2>
-          </div>
-
-          <button id="check" class="run" type="button">
-            开始检测 →
-          </button>
-        </div>
-
-        <div id="status" class="status">
-          <span class="status-dot"></span>
-          <span>点击按钮获取当前公网 IP 的基础信息。</span>
-        </div>
-
-        <div id="metrics" class="metrics hidden"></div>
-      </div>
-
-      <aside class="card">
-        <div class="side-title">风险参考指数</div>
-
-        <div class="score">
-          <div class="score-ring">
-            <b id="score">—</b>
-          </div>
-
-          <p id="scoreText">
-            完成检测后<br />
-            显示参考结果
-          </p>
-        </div>
-
-        <div class="tips">
-          <div class="tip">
-            <span class="tip-icon">✓</span>
-            <div>
-              <b>稳定优先</b>
-              避免频繁切换网络环境。
-            </div>
-          </div>
-
-          <div class="tip">
-            <span class="tip-icon">i</span>
-            <div>
-              <b>仅供参考</b>
-              不代表任何平台的最终风控结论。
-            </div>
-          </div>
-        </div>
-      </aside>
+      <div class="card"><div class="card-head"><div><div class="eyebrow">第一步</div><h2>看看你的网络是什么类型</h2></div><button id="check" class="run" type="button">开始检测</button></div><div id="status" class="status"><span class="status-dot"></span><span>点击“开始检测”，系统会自动判断你的网络情况。</span></div><div id="metrics" class="metrics hidden"></div></div>
+      <aside class="card"><div class="side-title">结果总览</div><div class="score"><div class="score-ring"><b id="score">—</b></div><p id="scoreText">完成检测后<br/>显示参考结果</p></div><div class="tips"><div class="tip"><span class="tip-icon">✓</span><div><b>稳定优先</b>避免频繁切换网络环境。</div></div><div class="tip"><span class="tip-icon">i</span><div><b>仅供参考</b>不代表任何平台的最终风控结论。</div></div></div></aside>
     </section>
-
-    <section class="info">
-      <div class="card">
-        <div class="eyebrow">WHY IT MATTERS</div>
-        <h3>网络归属</h3>
-        <p>
-          查看运营商和组织信息，识别当前连接的大致类型。
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="eyebrow">PRIVACY FIRST</div>
-        <h3>不保存信息</h3>
-        <p>
-          页面不会建立账号，也不会保存你的 IP 检测结果。
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="eyebrow">STAY COMPLIANT</div>
-        <h3>遵守规则</h3>
-        <p>
-          请使用正规网络和服务，并遵循相关平台的官方条款。
-        </p>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="eyebrow">NEXT STEP</div>
-
-      <h2 style="margin: 8px 0 0; font-size: 20px;">
-        需要更进一步的网络与资源信息？
-      </h2>
-
-      <p style="color: var(--muted); font-size: 13px; line-height: 1.7; margin: 10px 0 0;">
-        检测结果仅用于基础参考。请根据业务需求选择稳定、合法、符合服务条款的解决方案。
-      </p>
-
-      <div class="actions">
-        <a
-          class="link primary"
-          href="https://cancan666.com/zh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          查看更多资源 ↗
-        </a>
-
-        <a
-          class="link"
-          href="https://ipapi.co/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          了解数据来源 ↗
-        </a>
-      </div>
-    </section>
-
-    <footer class="foot">
-      NetSignal · 基础网络信息工具<br />
-      数据由公共接口临时返回，不构成任何平台审核或安全承诺。
-    </footer>
+    <section class="info"><div class="card"><div class="eyebrow">WHY IT MATTERS</div><h3>网络归属</h3><p>查看运营商和组织信息，识别当前连接的大致类型。</p></div><div class="card"><div class="eyebrow">PRIVACY FIRST</div><h3>不保存信息</h3><p>页面不会建立账号，也不会保存你的 IP 检测结果。</p></div><div class="card"><div class="eyebrow">STAY COMPLIANT</div><h3>遵守规则</h3><p>请使用正规网络和服务，并遵循相关平台的官方条款。</p></div></section>
+    <section class="card"><div class="eyebrow">检测说明</div><h2 style="margin:8px 0 0;font-size:20px">想了解更多？</h2><p style="color:var(--muted);font-size:13px;line-height:1.7;margin:10px 0 0">检测结果用大白话展示，技术细节放在检测结果下方。结果仅供参考，请根据实际情况判断。</p><div class="actions"><a class="link primary" href="https://cancan666.com/zh" target="_blank" rel="noopener noreferrer">查看相关资源</a><a class="link" href="https://ipwho.is/" target="_blank" rel="noopener noreferrer">查看数据来源</a></div></section>
+    <footer class="foot">NetSignal · 基础网络信息工具<br/>数据来自公开接口，仅供参考，不代表任何平台的审核结果。</footer>
   </div>
-
   <script>
     const button = document.getElementById("check");
     const status = document.getElementById("status");
@@ -773,104 +35,98 @@
     const score = document.getElementById("score");
     const scoreText = document.getElementById("scoreText");
 
-    const escapeHtml = (value) => {
-      return String(value ?? "—").replace(/[&<>"']/g, (char) => {
-        const map = {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        };
-
-        return map[char];
-      });
-    };
+    const escapeHtml = (value) => String(value ?? "—").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[char]));
 
     const setStatus = (text, type = "") => {
       status.className = "status " + type;
-      status.innerHTML =
-        '<span class="status-dot"></span><span>' +
-        escapeHtml(text) +
-        "</span>";
+      status.innerHTML = '<span class="status-dot"></span><span>' + escapeHtml(text) + "</span>";
     };
 
     const setMetrics = (data) => {
       const rows = [
-        ["PUBLIC IP", data.ip],
-        ["REGION", `${data.country_name || "—"} ${data.country_code || ""}`],
-        ["CITY", data.city],
-        ["ORGANIZATION", data.org],
-        ["TIMEZONE", data.timezone],
-        ["ASN", data.asn]
+        ["你的公网 IP", data.ip],
+        ["所在地区", `${data.country_name || "—"} ${data.country_code || ""}`],
+        ["所在城市", data.city],
+        ["网络运营商", data.org],
+        ["当地时区", data.timezone],
+        ["网络编号", data.asn]
+      ];
+      metrics.innerHTML = rows.map(([key, value]) => `
+        <div class="metric"><small>${escapeHtml(key)}</small><strong title="${escapeHtml(value)}">${escapeHtml(value)}</strong></div>
+      `).join("");
+      metrics.classList.remove("hidden");
+    };
+
+    const requestJson = async (url, timeout = 8000) => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    };
+
+    const getNetworkData = async () => {
+      const providers = [
+        async () => {
+          const d = await requestJson("https://ipwho.is/");
+          if (d.success === false) throw new Error("ipwho failed");
+          return {
+            ip: d.ip,
+            country_name: d.country,
+            country_code: d.country_code,
+            city: d.city,
+            org: d.connection?.org || d.connection?.isp,
+            timezone: d.timezone?.id,
+            asn: d.connection?.asn ? `AS${d.connection.asn}` : "—"
+          };
+        },
+        async () => {
+          const d = await requestJson("https://ipapi.co/json/");
+          if (d.error) throw new Error(d.reason || "ipapi failed");
+          return d;
+        }
       ];
 
-      metrics.innerHTML = rows
-        .map(([key, value]) => {
-          return `
-            <div class="metric">
-              <small>${escapeHtml(key)}</small>
-              <strong title="${escapeHtml(value)}">
-                ${escapeHtml(value)}
-              </strong>
-            </div>
-          `;
-        })
-        .join("");
-
-      metrics.classList.remove("hidden");
+      let lastError;
+      for (const provider of providers) {
+        try { return await provider(); } catch (error) { lastError = error; }
+      }
+      throw lastError || new Error("all providers failed");
     };
 
     button.addEventListener("click", async () => {
       button.disabled = true;
-      button.textContent = "分析中…";
-
+      button.textContent = "正在检测…";
       metrics.classList.add("hidden");
       score.textContent = "—";
-      scoreText.innerHTML = "正在分析<br />网络归属";
-      setStatus("正在查询公网 IP 信息，请稍候…");
+      scoreText.innerHTML = "正在判断<br />网络类型";
+      setStatus("正在检测，请稍候…");
 
       try {
-        const response = await fetch("https://ipapi.co/json/");
-
-        if (!response.ok) {
-          throw new Error("request failed");
-        }
-
-        const data = await response.json();
+        const data = await getNetworkData();
         const organization = (data.org || "").toLowerCase();
-
-        const cloudNetwork =
-          /amazon|aws|google cloud|microsoft|azure|digitalocean|ovh|vultr|oracle|alibaba|腾讯云|阿里云|华为云|hosting|server|datacenter|data center/.test(
-            organization
-          );
-
+        const cloudNetwork = /amazon|aws|google cloud|microsoft|azure|digitalocean|ovh|vultr|oracle|alibaba|腾讯云|阿里云|华为云|hosting|server|datacenter|data center/.test(organization);
         const points = cloudNetwork ? 42 : 78;
-
         score.textContent = points;
-
-        scoreText.innerHTML = cloudNetwork
-          ? "发现托管网络<br />建议进一步核实"
-          : "未发现明显关键词<br />保持稳定即可";
-
+        scoreText.innerHTML = cloudNetwork ? "可能是机房网络<br />建议进一步确认" : "暂未发现明显风险<br />可以继续使用";
         setStatus(
-          cloudNetwork
-            ? "检测到组织信息可能属于云厂商或托管网络，建议进一步核实。"
-            : "暂未发现明显的云厂商关键词，但这不等于任何平台会放行。",
+          cloudNetwork ? "检测到当前网络可能属于机房或云服务商，建议进一步确认。" : "暂未发现明显的机房关键词，但这不代表任何平台一定会放行。",
           cloudNetwork ? "warn" : "good"
         );
-
         setMetrics(data);
       } catch (error) {
         score.textContent = "!";
         scoreText.innerHTML = "接口暂时不可用<br />请稍后重试";
-        setStatus(
-          "检测失败：公共接口暂时不可用，请稍后重试。",
-          "bad"
-        );
+        setStatus("检测接口暂时拥挤，请稍后再试或切换网络。", "bad");
       } finally {
         button.disabled = false;
-        button.textContent = "重新检测 →";
+        button.textContent = "重新检测";
       }
     });
   </script>
